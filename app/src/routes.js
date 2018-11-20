@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import { isAuthenticated } from "./services/auth";

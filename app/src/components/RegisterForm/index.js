@@ -6,7 +6,6 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment
 } from "semantic-ui-react";
@@ -17,7 +16,7 @@ import api from "../../services/api"
 class RegisterForm extends Component {
   submit = async values => {
     try {
-      const response = await api.post("/register", values)
+      await api.post("/register", values)
       this.props.history.push("/")
     } catch (err) {
       console.log(err)

@@ -1,10 +1,16 @@
-import { createStore, combineReducers } from "redux";
-import { reducer as formReducer } from "redux-form";
+import { createStore, applyMiddleware } from "redux";
+import { compose } from "redux";
+import logger from "redux-logger";
+import thunk from 'redux-thunk';
 
-const rootReducer = combineReducers({
-  form: formReducer
-})
+import rootReducer from './reducers'
 
-const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(logger),
+    applyMiddleware(thunk),
+  )
+);
 
 export default store;

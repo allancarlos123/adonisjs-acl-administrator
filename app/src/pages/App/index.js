@@ -1,17 +1,22 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import {
+  Container,
+  Grid,
+  Header,
+} from "semantic-ui-react";
 
-// import api from "../../services/api";
-// import { login } from "../../services/auth";
+import UsersList from "../../components/UsersList"
 
-class App extends Component {
-  render() {
-    return (
-      <React.Fragment>
-        <h1>App</h1>
-      </React.Fragment>
-    );
-  }
-}
+const App = () => (
+  <Container style={{ marginTop: "3em" }}>
+    <Header as="h1" dividing>Theming Examples</Header>
 
-export default withRouter(App);
+    <Grid stackable>
+      <Grid.Column>
+        <UsersList />
+      </Grid.Column>
+    </Grid>
+  </Container>
+);
+
+export default App
