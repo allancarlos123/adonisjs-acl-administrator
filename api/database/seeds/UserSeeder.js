@@ -29,7 +29,7 @@ class UserSeeder {
 
     const usersArray = await Factory
       .model('App/Models/User')
-      .createMany(2)
+      .createMany(50)
     
     await user.roles().attach([role.id])
     // await usersArray.roles().attach([role.id])

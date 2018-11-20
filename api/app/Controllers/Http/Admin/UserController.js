@@ -5,11 +5,13 @@ const User = use('App/Models/User')
 const Role = use('Role')
 
 class UserController {
-  async index () {
+  async index ({ request, params }) {
+    const page = request.input('page')
     const users = await User
-      .query()
-      .with('roles')
-      .fetch()
+    .query()
+    .with('roles')
+    .paginate(page)
+    // .fetch()
 
     return users
   }
