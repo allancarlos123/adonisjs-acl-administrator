@@ -13,14 +13,12 @@ import {
 import { Field, reduxForm } from "redux-form";
 
 import api from "../../services/api"
-import { login } from "../../services/auth"
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
   submit = async values => {
     try {
-      const response = await api.post("/login", values)
-      login(response.data.token)
-      this.props.history.push("/app")
+      const response = await api.post("/register", values)
+      this.props.history.push("/")
     } catch (err) {
       console.log(err)
     }
@@ -41,7 +39,7 @@ class LoginForm extends Component {
     <Grid textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="teal" textAlign="center">
-          Log-in to your account
+          Create an account
         </Header>
         <Form size="large" onSubmit={handleSubmit(this.submit)}>
           <Segment stacked>
@@ -64,12 +62,12 @@ class LoginForm extends Component {
             />
 
             <Button color="teal" fluid size="large">
-              Login
+              Register
             </Button>
           </Segment>
         </Form>
         <Message>
-          New to us? <a href="/register">Sign Up</a>
+          You already have an account? <a href="/">Sign In</a>
         </Message>
       </Grid.Column>
     </Grid>
@@ -81,6 +79,6 @@ class LoginForm extends Component {
 export default compose(
   withRouter,
   reduxForm({
-    form: "signin"
+    form: "signup"
   })
-)(LoginForm)
+)(RegisterForm)

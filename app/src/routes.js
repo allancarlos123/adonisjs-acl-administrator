@@ -51,7 +51,7 @@ const Routes = () => (
   <BrowserRouter>
     <Switch>
       <VerifyAuth exact path="/" component={SignIn} />
-      <VerifyAuth path="/signup" component={SignUp} />
+      <VerifyAuth path="/register" component={SignUp} />
       <PrivateRoute path="/app" component={App} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Switch>
