@@ -67,7 +67,7 @@ class RegisterForm extends Component {
           </Segment>
         </Form>
         <Message>
-          You already have an account? <a href="/">Sign In</a>
+          You already have an account? <Link to="/">Sign In</Link>
         </Message>
       </Grid.Column>
     </Grid>

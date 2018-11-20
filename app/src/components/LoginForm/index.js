@@ -69,7 +69,7 @@ class LoginForm extends Component {
           </Segment>
         </Form>
         <Message>
-          New to us? <a href="/register">Sign Up</a>
+          New to us? <Link to="/register">Sign Up</Link>
         </Message>
       </Grid.Column>
     </Grid>
