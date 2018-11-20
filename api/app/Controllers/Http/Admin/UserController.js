@@ -31,15 +31,19 @@ class UserController {
 
     user.email = request.input('email')
     user.password = request.input('password')
-    user.profile_pic = `${new Date().getTime()}-${profilePic.clientName}`
     
-    await profilePic.move(Helpers.publicPath('uploads/avatar'), {
-      name: `${user.profile_pic}`
-    })
-    
-    if (!profilePic.moved()) {
-      return profilePic.error()
+    if (profilePic) {
+      user.profile_pic = `${new Date().getTime()}-${profilePic.clientName}`
+
+      await profilePic.move(Helpers.publicPath('uploads/avatar'), {
+        name: `${user.profile_pic}`
+      })
+      
+      if (!profilePic.moved()) {
+        return profilePic.error()
+      }
     }
+
 
     await user.save()
     return user
