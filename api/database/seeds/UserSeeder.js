@@ -14,25 +14,38 @@
 const Factory = use('Factory')
 
 class UserSeeder {
-  async run () {
-    const role = await Factory.model("Adonis/Acl/Role").create({
+  async run() {
+    const moderatorRole = await Factory.model("Adonis/Acl/Role").create({
       slug: "moderator",
       name: "Moderator",
     });
-
-    const user = await Factory
+    const moderatorUser = await Factory
       .model('App/Models/User')
       .create({
         email: "user@demo.com",
         password: "demo"
       })
+    await moderatorUser.roles().attach([moderatorRole.id])
 
-    const usersArray = await Factory
+
+    const adminRole = await Factory.model('Adonis/Acl/Role').create()
+    const adminUser = await Factory
       .model('App/Models/User')
-      .createMany(50)
+      .create({
+        email: "admin@demo.com",
+        password: "demo"
+      })
+    await adminUser.roles().attach([adminRole.id])
+
     
-    await user.roles().attach([role.id])
-    // await usersArray.roles().attach([role.id])
+    
+    for (let i = 0; i < 25; i++) {
+      const userModerator = await Factory
+        .model('App/Models/User')
+        .create()
+        await userModerator.roles().attach([moderatorRole.id])
+      console.log(`${i+1}/25 users have been created`)
+    }
   }
 }
 
