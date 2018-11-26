@@ -1,6 +1,10 @@
 import React, { Component, Fragment } from 'react'
+import { compose } from "redux";
 import { connect } from "react-redux";
+import { ModalRoute, ModalLink } from "react-router-modal";
+import { Link, withRouter } from "react-router-dom"
 import {
+  Modal,
   Button,
   Header,
   Image,
@@ -12,6 +16,8 @@ import {
 } from "semantic-ui-react";
 
 import { usersFetch } from "../../actions/users"
+
+import ShowUser from "../ShowUser"
 
 class UsersList extends Component {
   state = {
@@ -40,7 +46,9 @@ class UsersList extends Component {
   render() {
     const { activePage, totalPages } = this.state
     const {
-      users: { users, isFetching, fetchError }
+      users: { users, isFetching, fetchError },
+      match,
+      history
     } = this.props;
     
     return (
@@ -86,7 +94,10 @@ class UsersList extends Component {
                 </Table.Cell>
                 <Table.Cell>{user.created_at}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>No</Table.Cell>
+                <Table.Cell>
+                  <Link to={`/app/users/${user.id}`}>Show</Link>
+                  {/* <Link to={`/app/users/${user.id}`}>Show</Link> */}
+                </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -113,6 +124,21 @@ class UsersList extends Component {
             </Table.Row>
           </Table.Footer>
         </Table>
+
+        <ModalRoute
+          path={`${match.url}/users/:id`}
+          parentPath={match.url}
+          component={ShowUser}
+        />
+        <Modal trigger={<Button>Show Modal</Button>} centered={false}>
+          <Modal.Content>
+            <Modal.Description>
+              <Header>Default Profile Image</Header>
+              <p>We've found the following gravatar image associated with your e-mail address.</p>
+              <p>Is it okay to use this photo?</p>
+            </Modal.Description>
+          </Modal.Content>
+        </Modal>
       </Fragment>
     );
   }
@@ -126,7 +152,10 @@ const mapDispatchToProps = dispatch => ({
   fetchUsers: (activePage) => dispatch(usersFetch(activePage))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(UsersList)

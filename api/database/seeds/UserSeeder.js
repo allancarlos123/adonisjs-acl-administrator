@@ -36,15 +36,13 @@ class UserSeeder {
         password: "demo"
       })
     await adminUser.roles().attach([adminRole.id])
-
     
-    
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 3; i++) {
       const userModerator = await Factory
         .model('App/Models/User')
         .create()
         await userModerator.roles().attach([moderatorRole.id])
-      console.log(`${i+1}/25 users have been created`)
+      console.log(`${i+1}/3 users have been created`)
     }
   }
 }

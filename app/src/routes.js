@@ -1,5 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { ModalContainer } from "react-router-modal";
+import { ModalRoute } from "react-router-modal";
+// import "react-router-modal/css/react-router-modal.css";
 
 import { isAuthenticated } from "./services/auth";
 
@@ -49,12 +52,15 @@ function VerifyAuth({ component: Component, ...rest }) {
 
 const Routes = () => (
   <BrowserRouter>
-    <Switch>
-      <VerifyAuth exact path="/" component={SignIn} />
-      <VerifyAuth path="/register" component={SignUp} />
-      <PrivateRoute path="/app" component={App} />
-      <Route path="*" component={() => <h1>Page not found</h1>} />
-    </Switch>
+    <Fragment>
+      <Switch>
+        <VerifyAuth exact path="/" component={SignIn} />
+        <VerifyAuth path="/register" component={SignUp} />
+        <PrivateRoute path="/app" component={App} />
+        <Route path="*" component={() => <h1>Page not found</h1>} />
+      </Switch>
+      <ModalContainer />
+    </Fragment>
   </BrowserRouter>
 );
 

@@ -1,5 +1,6 @@
 'use strict'
 
+const Database = use('Database')
 const Helpers = use('Helpers')
 const User = use('App/Models/User')
 const Role = use('Role')
@@ -11,7 +12,6 @@ class UserController {
     .query()
     .with('roles')
     .paginate(page)
-    // .fetch()
 
     return users
   }
@@ -22,21 +22,20 @@ class UserController {
       .query()
       .with('roles')
       .where('id', id)
-      .fetch()
-
+      .first()
     return user
   }
   
   async create ({ request }) {
     const user = new User()
     const profilePic = request.file('profile_pic')
-
+    
     user.email = request.input('email')
     user.password = request.input('password')
     
     if (profilePic) {
       user.profile_pic = `${new Date().getTime()}-${profilePic.clientName}`
-
+      
       await profilePic.move(Helpers.publicPath('uploads/avatar'), {
         name: `${user.profile_pic}`
       })
@@ -47,8 +46,7 @@ class UserController {
     } else {
       user.profile_pic = "default_avatar.png"
     }
-
-
+    
     await user.save()
     return user
   }
@@ -58,22 +56,32 @@ class UserController {
     const profilePic = request.file("profile_pic");
     const user = await User.findOrFail(params.id)
     const data = request.all()
-
-    user.profile_pic = `${new Date().getTime()}-${profilePic.clientName}`
-
-    await profilePic.move(Helpers.publicPath('uploads/avatar'), {
-      name: `${user.profile_pic}`
-    })
-
-    if (!profilePic.moved()) {
-      return profilePic.error()
+    delete data.avatar
+    delete data.roles
+    
+    if (profilePic) {
+      user.profile_pic = `${new Date().getTime()}-${profilePic.clientName}`
+      
+      await profilePic.move(Helpers.publicPath('uploads/avatar'), {
+        name: `${user.profile_pic}`
+      })
+      
+      if (!profilePic.moved()) {
+        return profilePic.error()
+      }
     }
 
+    console.log(request.body)
+    
     if (roles_id) {
       await user.roles().detach();
       await user.roles().attach(roles_id);
+      delete data.roles_id
     }
-    
+
+    // delete data.roles_id
+    console.log(data)
+
     user.merge(data)
     await user.save()
 

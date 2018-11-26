@@ -35,3 +35,9 @@ Route.get('/', async () => {
 
 Route.post('/register', 'Admin/UserController.create')
 Route.post('/login', 'Admin/SessionController.create')
+
+Route.get('/roles', async () => {
+  return await Database
+    .select('*')
+    .from('roles')
+})
