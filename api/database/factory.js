@@ -26,7 +26,6 @@ Factory.blueprint("Adonis/Acl/Role", (faker, index, data) => {
 
 Factory.blueprint("App/Models/User", async (faker, index, data) => {
   const defaultValues = {
-    profile_pic: "default_avatar.png",
     email: faker.email(),
     password: await Hash.make(faker.password())
   };

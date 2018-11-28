@@ -43,8 +43,6 @@ class UserController {
       if (!profilePic.moved()) {
         return profilePic.error()
       }
-    } else {
-      user.profile_pic = "default_avatar.png"
     }
     
     await user.save()

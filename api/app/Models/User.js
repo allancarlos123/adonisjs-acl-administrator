@@ -18,7 +18,9 @@ class User extends Model {
   }
 
   getAvatar ({ profile_pic }) {
-    return `${Env.get("APP_URL")}/uploads/avatar/${profile_pic}`;
+    if (profile_pic) {
+      return `${Env.get("APP_URL")}/uploads/avatar/${profile_pic}`;
+    }
   }
   
   static boot() {
