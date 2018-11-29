@@ -163,9 +163,9 @@ export const DELETE_USER = "DELETE_USER"
 export function deleteUser(userId, callback) {
   return dispatch => {
     return api.delete(`/users/${userId}`).then(
-      response => {
+      async response => {
+        await dispatch(userDeleteSuccess(true))
         callback()
-        dispatch(userDeleteSuccess(true))
       },
       err => dispatch(userDeleteError(true))
     )
