@@ -1,8 +1,10 @@
+import _ from "lodash"
 import {
   USER_FETCH_ERROR,
   USER_IS_FETCHING,
-  RECEIVE_USER
-} from "../actions/users"
+  RECEIVE_USER,
+  DELETE_USER
+} from "../actions/users";
 
 export default function user(
   state = {
@@ -30,6 +32,8 @@ export default function user(
         fetchError: false,
         user: action.payload
       }
+    case DELETE_USER:
+      return _.omit(...state, action.payload)
     default:
       return state
   }

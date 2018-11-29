@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { ModalContainer } from "react-router-modal";
 import { ModalRoute } from "react-router-modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import "react-router-modal/css/react-router-modal.css";
 
 import { isAuthenticated } from "./services/auth";
@@ -60,6 +62,7 @@ const Routes = () => (
         <Route path="*" component={() => <h1>Page not found</h1>} />
       </Switch>
       <ModalContainer />
+      <ToastContainer />
     </Fragment>
   </BrowserRouter>
 );

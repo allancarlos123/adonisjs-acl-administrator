@@ -69,16 +69,11 @@ class UserController {
       }
     }
 
-    console.log(request.body)
-    
     if (roles_id) {
       await user.roles().detach();
       await user.roles().attach(roles_id);
       delete data.roles_id
     }
-
-    // delete data.roles_id
-    console.log(data)
 
     user.merge(data)
     await user.save()

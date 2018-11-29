@@ -2,10 +2,12 @@ import React, { Component, Fragment } from 'react'
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { ModalRoute, ModalLink } from "react-router-modal";
+import { toast } from "react-toastify";
 import { Link, withRouter } from "react-router-dom"
 import {
   Modal,
   Button,
+  ButtonGroup,
   Header,
   Image,
   Table,
@@ -15,7 +17,7 @@ import {
   Pagination
 } from "semantic-ui-react";
 
-import { usersFetch } from "../../actions/users"
+import { usersFetch, deleteUser } from "../../actions/users"
 
 import ShowUser from "../ShowUser"
 
@@ -27,33 +29,49 @@ class UsersList extends Component {
   };
 
   async componentDidMount() {
-    const { activePage } = this.state
+    const { activePage } = this.state;
 
     await this.props.fetchUsers(activePage);
-    
-    this.setState({users: this.props.users.users.data})
-    this.setState({totalPages: this.props.users.users.lastPage})
+
+    this.setState({ users: this.props.users.users.data });
+    this.setState({ totalPages: this.props.users.users.lastPage });
   }
-  
+
   handleInputChange = (e, { value }) => this.setState({ activePage: value });
-  
+
   handlePaginationChange = async (e, { activePage }) => {
-    await this.setState({ activePage })
+    await this.setState({ activePage });
     await this.props.fetchUsers(this.state.activePage);
-    this.setState({users: this.props.users.users.data})
+    this.setState({ users: this.props.users.users.data });
   };
 
+  deleteUser = userId => {
+    const { activePage } = this.state;
+
+    this.props.deleteUser(userId, async () => {
+      await this.props.fetchUsers(activePage);
+      this.setState({ users: this.props.users.users.data });
+      this.setState({ totalPages: this.props.users.users.lastPage });
+      // this.deleteNotify();
+    });
+  };
+
+  deleteNotify = () =>
+    toast("🦄  Deleted user successfully!", {
+      position: toast.POSITION.TOP_CENTER
+    });
+
   render() {
-    const { activePage, totalPages } = this.state
+    const { activePage, totalPages } = this.state;
     const {
       users: { users, isFetching, fetchError },
       match,
       history
     } = this.props;
-    
+
     return (
       <Fragment>
-        <Grid columns={2} verticalAlign='middle'>
+        <Grid columns={2} verticalAlign="middle">
           <Grid.Column>
             <Pagination
               activePage={activePage}
@@ -69,7 +87,7 @@ class UsersList extends Component {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Registration Date</Table.HeaderCell>
               <Table.HeaderCell>E-mail address</Table.HeaderCell>
-              <Table.HeaderCell>Premium Plan</Table.HeaderCell>
+              <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
 
@@ -84,7 +102,7 @@ class UsersList extends Component {
                     <Image src={user.avatar} rounded size="mini" />
                     <Header.Content>
                       Lena
-                    <Header.Subheader>
+                      <Header.Subheader>
                         {user.roles.map(role => (
                           <Fragment key={role.id}>{role.name}</Fragment>
                         ))}
@@ -94,9 +112,18 @@ class UsersList extends Component {
                 </Table.Cell>
                 <Table.Cell>{user.created_at}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>
-                  <Link to={`/app/users/${user.id}`}>Show</Link>
-                  {/* <Link to={`/app/users/${user.id}`}>Show</Link> */}
+                <Table.Cell collapsing>
+                  <Button.Group>
+                    <Button
+                      as={Link}
+                      icon="pencil"
+                      to={`/app/users/${user.id}`}
+                    />
+                    <Button
+                      icon="trash"
+                      onClick={() => this.deleteUser(user.id)}
+                    />
+                  </Button.Group>
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -114,12 +141,12 @@ class UsersList extends Component {
                   size="small"
                 >
                   <Icon name="user" /> Add User
-              </Button>
+                </Button>
 
                 <Button size="small">Approve</Button>
                 <Button disabled size="small">
                   Approve All
-              </Button>
+                </Button>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>
@@ -130,15 +157,6 @@ class UsersList extends Component {
           parentPath={match.url}
           component={ShowUser}
         />
-        <Modal trigger={<Button>Show Modal</Button>} centered={false}>
-          <Modal.Content>
-            <Modal.Description>
-              <Header>Default Profile Image</Header>
-              <p>We've found the following gravatar image associated with your e-mail address.</p>
-              <p>Is it okay to use this photo?</p>
-            </Modal.Description>
-          </Modal.Content>
-        </Modal>
       </Fragment>
     );
   }
@@ -149,7 +167,8 @@ const mapStateToProps = ({ users }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  fetchUsers: (activePage) => dispatch(usersFetch(activePage))
+  fetchUsers: activePage => dispatch(usersFetch(activePage)),
+  deleteUser: (userId, callback) => dispatch(deleteUser(userId, callback))
 })
 
 export default compose(

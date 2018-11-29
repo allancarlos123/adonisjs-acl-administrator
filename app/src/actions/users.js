@@ -1,4 +1,5 @@
 import api from "../services/api"
+import { toast } from "react-toastify";
 
 const fetchUsers = async activePage => {
   try {
@@ -137,6 +138,36 @@ export function editUser(userId, values) {
     return userEdit(userId).then(
       res => console.log(res),
       err => console.log(err)
+    )
+  }
+}
+
+// Delete user
+export const USER_DELETE_ERROR = "USER_DELETE_ERROR";
+export function userDeleteError(bool) {
+  toast.error("🦄  Failed to delete user!", {
+    position: toast.POSITION.TOP_CENTER
+  });
+  return { type: USER_DELETE_ERROR, hasError: bool };
+}
+
+export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
+export function userDeleteSuccess(bool) {
+  toast("🦄  Deleted user successfully!", {
+    position: toast.POSITION.TOP_CENTER
+  });
+  return { type: USER_DELETE_SUCCESS, hasDeleted: bool };
+}
+
+export const DELETE_USER = "DELETE_USER"
+export function deleteUser(userId, callback) {
+  return dispatch => {
+    return api.delete(`/users/${userId}`).then(
+      response => {
+        callback()
+        dispatch(userDeleteSuccess(true))
+      },
+      err => dispatch(userDeleteError(true))
     )
   }
 }
