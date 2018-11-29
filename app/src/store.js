@@ -8,8 +8,8 @@ import rootReducer from './reducers'
 const store = createStore(
   rootReducer,
   compose(
-    applyMiddleware(logger),
     applyMiddleware(thunk),
+    applyMiddleware(logger),
   )
 );
 
